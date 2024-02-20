@@ -174,10 +174,3 @@ ASSISTANT_ID = config('ASSISTANT_ID')
 TOKEN_LIMIT = 9_000
 
 # ---------------------------------------------------
-
-# --------------------Pinecone-----------------------
-
-PINECONE_API_KEY = config('PINECONE_API_KEY')
-PINECONE_ENV = config('PINECONE_ENV')
-
-# ---------------------------------------------------
