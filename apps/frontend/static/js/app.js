@@ -49,7 +49,7 @@ let array_messages = [];
 let array_voices = [];
 let filterBotWords = ["Robot:", "Bot:"];
 
-let base_url = 'https://django.onrender.com/api/';
+let base_url = 'https://django-chatbot-recursoshumanos.onrender.com/api/';
 //let base_url = 'http://127.0.0.1:8000/api/';
 let data_procedures = [];
 let index_procedure = 0;

@@ -3,7 +3,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django.onrender.com']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'django-chatbot-recursoshumanos.onrender.com']
 
 DATABASES = {
     'default': {
