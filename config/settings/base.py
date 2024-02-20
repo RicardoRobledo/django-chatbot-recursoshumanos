@@ -146,17 +146,6 @@ AUTH_USER_MODEL = "users.User"
 LOGIN_REDIRECT_URL = 'index'
 LOGOUT_REDIRECT_URL = 'login'
 
-# ----------------------Urls-------------------------
-
-BCS_SERVICES_URL = config('BCS_SERVICES_URL')
-CATALOGO_NACIONAL_URL = config('CATALOGO_NACIONAL_URL')
-TRAMITES_Y_SERVICIOS_URL = config('TRAMITES_Y_SERVICIOS_URL')
-SAT_URL = config('SAT_URL')
-APPS_BCS_URL = config('APPS_BCS_URL')
-TRAMITES_URL = config('TRAMITES_URL')
-BCS_GOB_URL = config('BCS_GOB_URL')
-CITAS_LINEA_URL = config('CITAS_LINEA_URL')
-GOB_URL = config('GOB_URL')
 
 # ---------------------------------------------------
 
