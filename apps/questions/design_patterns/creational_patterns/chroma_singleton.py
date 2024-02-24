@@ -41,22 +41,72 @@ class ChromaSingleton():
             cls.__client = cls.__get_connection(cls.__embeddings)
 
         return cls.__client
+
     
+    @classmethod
+    async def re2(cls, question):
+
+        from langchain.chains import RetrievalQA
+        from langchain.chat_models import ChatOpenAI
+
+        chain = RetrievalQA.from_chain_type(llm=ChatOpenAI(
+            temperature=0,model_name='gpt-3.5-turbo'), 
+                                  chain_type="stuff", 
+                                  retriever=cls.__client.as_retriever(), 
+                                  return_source_documents=True)
+        
+        query = question
+        
+        return chain(query)
+
 
     @classmethod
     async def create(cls):
-        import pandas as pd
-        df = pd.read_csv("datos_recursos_humanos.csv")
+        import os
 
-        texts = df["Pregunta"].to_list()
-        titles = df["Respuesta"].to_list()
+        documents = os.listdir('datos')
+
         docs = []
 
-        for i, j in zip(texts, titles):
-            docs.append(Document(page_content=i, metadata={"pregunta":i, "respuesta":j}))
+        from langchain.docstore.document import Document
 
-        Chroma.from_documents(docs, collection_name="recursos_humanos", persist_directory="chroma_db", embedding=cls.__embeddings)
+        for i in documents:
+
+            with open(f'datos/{i}', encoding='utf-8') as file:
+                docs.append(
+                    Document(page_content=str.join('', file.readlines()), metadata={'file':i})
+                )
+
+        from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=1800,
+            chunk_overlap=300,
+            length_function=len,
+            is_separator_regex=False,
+        )
+
+        splitter_docs = text_splitter.split_documents(docs)
+        Chroma.from_documents(splitter_docs, collection_name="recursos_humanos", persist_directory="chroma_db", embedding=cls.__embeddings)
     
+
+    @classmethod
+    async def multi_query_retriever(cls, multi_query):
+        """
+        this method use Multi-Query Retriever method
+        
+        :param multi_query: list of questions
+        :return: a list with documents
+        """
+
+        docs = []
+
+        for query in multi_query:
+            print(docs)
+            docs+=await cls.search_similarity_procedure(query)
+
+        return docs
+
 
     @classmethod
     async def search_similarity_procedure(cls, text:str):
@@ -67,6 +117,6 @@ class ChromaSingleton():
         :return: a list with our documents 
         """
 
-        docs = await cls.__client.asimilarity_search(text, k=10)
+        docs = await cls.__client.asimilarity_search(text, k=2)
         
         return docs

@@ -4,6 +4,13 @@ import time
 from openai import OpenAI
 import tiktoken
 from langchain.agents.openai_assistant import OpenAIAssistantRunnable
+from langchain.chains import create_sql_query_chain
+from langchain_openai import ChatOpenAI
+from langchain_community.utilities import SQLDatabase
+from langchain_core.pydantic_v1 import BaseModel, Field
+
+from .....questions.design_patterns.creational_patterns.chroma_singleton import ChromaSingleton
+from ....utils.prompt_handlers.prompt_loader import load_prompt_file
 
 
 __author__ = 'Ricardo'
@@ -37,6 +44,63 @@ class OpenAISingleton():
             cls.__assistant = OpenAIAssistantRunnable(assistant_id=settings.ASSISTANT_ID, as_agent=True)
         
         return cls.__client
+    
+
+    @classmethod
+    def query_information_user(cls, username):
+        """
+        Get all information of a user given
+
+        :param user: username of a user
+        :return: a string being the answer
+        """
+
+        db = SQLDatabase.from_uri(f"sqlite:///{settings.DATABASES['default']['NAME']}")
+
+        llm = ChatOpenAI(model="gpt-3.5-turbo-1106", temperature=0)
+        #chain = create_sql_query_chain(llm, db)
+        #response = chain.invoke({"question": f'Dame toda la informacion del usuario con nombre {username}'})
+
+        from langchain_community.agent_toolkits import create_sql_agent
+        agent_executor = create_sql_agent(llm, db=db, agent_type="openai-tools", verbose=True)
+        
+        resp = agent_executor.invoke(
+            f'Dime informacion del usuario con nombre {username}, con informacion legible, si tiene fechas en un formato conviertelo en entendible'
+        )
+
+        return resp
+
+
+    @classmethod
+    def create_multi_query_questions(cls, question):
+        """
+        Get all information of a user given
+
+        :param user: username of a user
+        :return: a tuple with the query result and the query
+        """
+
+        prompt = load_prompt_file('apps/chatbot/prompts/prompt_multi_query_questions.txt')
+
+        from langchain_core.output_parsers import StrOutputParser
+
+        parser = StrOutputParser()
+
+        chat_model = ChatOpenAI(model="gpt-3.5-turbo", temperature=0)
+
+        from langchain.prompts import ChatPromptTemplate
+
+        prompt = ChatPromptTemplate.from_template(
+            template=prompt
+        )
+
+        from langchain_core.runnables import RunnablePassthrough
+
+        response = prompt | chat_model | parser
+        
+        response = response.invoke({'question':question})
+
+        return response.split('\n')
 
 
     @classmethod
@@ -53,7 +117,7 @@ class OpenAISingleton():
         """
         Get a thread converation
 
-        :param thread: and int that contain our thread identifier
+        :param thread: an int that contain our thread identifier
         """
 
         return cls.__client.beta.threads.messages.list(thread_id)

@@ -1,0 +1,7 @@
+##### contexto #####
+documentos: {documents}
+informacion de empleado: {information}
+
+##### hacer #####
+Necesito que calificar los documentos del contexto del 1 al 10 en base a la informacion del empleado, después removeré los que no responden a la
+pregunta o que estén por debajo de calificacion 6 en base a la pregunta: {question}. finalmente devolveré los documentos relevantes como están en un resumen de ellos

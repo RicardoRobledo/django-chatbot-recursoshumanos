@@ -48,9 +48,10 @@ let = badWords = []
 let array_messages = [];
 let array_voices = [];
 let filterBotWords = ["Robot:", "Bot:"];
+let user = '';
 
-let base_url = 'https://django-chatbot-recursoshumanos.onrender.com/api/';
-//let base_url = 'http://127.0.0.1:8000/api/';
+//let base_url = 'https://django-chatbot-recursoshumanos.onrender.com/api/';
+let base_url = 'http://127.0.0.1:8000/api/';
 let data_procedures = [];
 let index_procedure = 0;
 
@@ -188,6 +189,7 @@ function loadData(url, urls) {
     </div>
 `);*/
 
+
     $("#overflow-chat").append(`
 <div class="conversation-thread thread-ai" id="welcome-message">
   ${avatar_in_chat}
@@ -197,7 +199,7 @@ function loadData(url, urls) {
 		${audio_in_chat}            
 	<div class="user-name"><h5>${employee_name}</h5></div>
 	  <div class="message-text">
-		<div class="chat-response">${'¿Que tal buen empleado?, Preguntame lo que necesites saber de recursos humanos'}</div>
+		<div class="chat-response">¿Que tal ${$("#badge").find("#badge_text").text()}?, Preguntame lo que necesites saber de recursos humanos</div>
 	  </div>
 		<div class="date-chat"><img src="../../static/img/icon-clock.svg"> ${current_date}</div>
 	</div>
@@ -285,12 +287,13 @@ function loadData(url, urls) {
 	//$("#chat").prop("disabled", true);
 	$(".col-contacts-border").hide();
 	$("#microphone-button").hide();
-	$("#welcome-message").show();
 	$("#first-message").hide();
 	$(".btn-send-chat").hide();
-	$("#menu").hide();
+
+	user = $("#badge").find("#badge_text").text();
 
 	}).catch(err => { throw err })
+
 
 }
 
@@ -567,6 +570,7 @@ async function getResponse(prompt) {
 	const params = new URLSearchParams();
 	params.append('array_chat', JSON.stringify(array_messages[array_messages.length-1]));
 	params.append('thread_id', localStorage.getItem('thread_id'));
+	params.append('user', user);
 	params.append('employee_name', employee_name);
 	params.append('model', API_MODEL);
 	params.append('temperature', employee_temperature);

@@ -5,19 +5,19 @@ from django.contrib.auth.admin import UserAdmin
 
 class CustomUserAdmin(UserAdmin):
 
-    list_display = ('username', 'email', 'is_superuser')
+    list_display = ('username', 'name', 'email', 'is_superuser')
     readonly_fields = ('is_superuser', 'is_active')
-    search_fields = ('username', 'email')
+    search_fields = ('username', 'name', 'email')
 
     fieldsets = (
-        (None, {'fields': ('username', 'email', 'password')}),
+        (None, {'fields': ('name', 'username', 'email', 'password')}),
         ('Permissions', {'fields': ('is_active', 'is_superuser')}),
     )
     
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2')}
+            'fields': ('name', 'username', 'email', 'password1', 'password2')}
         ),
     )
 

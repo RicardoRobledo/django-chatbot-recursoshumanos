@@ -15,10 +15,11 @@ __version__ = '0.1'
 class UserManager(BaseUserManager):
 
 
-    def create_user(self, username, password, email, is_staff, is_active, is_superuser=False):
+    def create_user(self, username, password, email, is_staff, is_active, is_superuser=False, name=''):
         user = self.model(
             username=username,
             email=email,
+            name=name,
             is_staff=is_staff,
             is_active=is_active,
             is_superuser=is_superuser,
@@ -55,7 +56,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     email = models.EmailField(unique=True, null=False, blank=False,)
-    username = models.CharField(unique=True, max_length=20, null=False, blank=False,)
+    username = models.CharField(unique=True, max_length=20, null=False, blank=True,)
+    name = models.CharField(max_length=20, null=False, blank=False,)
     is_staff = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
