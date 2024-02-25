@@ -75,8 +75,7 @@ async def post_message(request):
 
     context = ''
     for i in unique_docs:
-        context+=i
-    """
+        context+=i"""
 
     from ..utils.prompt_handlers.prompt_loader import load_prompt_file
 
