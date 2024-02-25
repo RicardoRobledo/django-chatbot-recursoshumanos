@@ -44,7 +44,7 @@ async def post_message(request):
     ChromaSingleton()
     #await ChromaSingleton.create()
 
-    """docs = await ChromaSingleton.search_similarity_procedure(array_chat_json['content'])
+    docs = await ChromaSingleton.search_similarity_procedure(array_chat_json['content'])
 
     text = ''
     for i in docs:
@@ -52,7 +52,7 @@ async def post_message(request):
 
     sql_response = OpenAISingleton.query_information_user(user)
 
-    
+    """
     # ---------------------------------------------------
 
     multi_query_questions = OpenAISingleton.create_multi_query_questions(array_chat_json['content'])
@@ -92,7 +92,7 @@ async def post_message(request):
 
     text = await openairep.post_user_message(text, thread_id)"""
 
-    return Response({'msg':'text'})
+    return Response({'msg':sql_response['output']})
 
 
 @api_view(['POST'])
