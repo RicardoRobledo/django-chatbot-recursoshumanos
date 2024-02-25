@@ -50,7 +50,7 @@ async def post_message(request):
     for i in docs:
         text+=f'\n\n{i.page_content}'
 
-    sql_response = OpenAISingleton.query_information_user(user)
+    sql_response = await OpenAISingleton.query_information_user(user)
 
     """
     # ---------------------------------------------------

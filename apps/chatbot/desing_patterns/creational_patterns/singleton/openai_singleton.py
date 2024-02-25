@@ -47,7 +47,7 @@ class OpenAISingleton():
     
 
     @classmethod
-    def query_information_user(cls, username):
+    async def query_information_user(cls, username):
         """
         Get all information of a user given
 
@@ -64,7 +64,7 @@ class OpenAISingleton():
         from langchain_community.agent_toolkits import create_sql_agent
         agent_executor = create_sql_agent(llm, db=db, agent_type="openai-tools", verbose=True)
         
-        resp = agent_executor.invoke(
+        resp = agent_executor.ainvoke(
             f'Dime informacion del usuario con nombre {username}, con informacion legible, si tiene fechas en un formato conviertelo en entendible'
         )
 
