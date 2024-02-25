@@ -49,8 +49,6 @@ async def post_message(request):
     text = ''
     for i in docs:
         text+=f'\n\n{i.page_content}'
-    
-    print(text)
 
     sql_response = await OpenAISingleton.query_information_user(user)
 
@@ -84,7 +82,7 @@ async def post_message(request):
 
     from langchain.prompts import PromptTemplate
     text = PromptTemplate.from_template(prompt).format(
-        information=sql_response['input'],
+        information=sql_response['output'],
         context=text,
         question=array_chat_json['content']
     )

@@ -42,23 +42,6 @@ class ChromaSingleton():
 
         return cls.__client
 
-    
-    @classmethod
-    async def re2(cls, question):
-
-        from langchain.chains import RetrievalQA
-        from langchain.chat_models import ChatOpenAI
-
-        chain = RetrievalQA.from_chain_type(llm=ChatOpenAI(
-            temperature=0,model_name='gpt-3.5-turbo'), 
-                                  chain_type="stuff", 
-                                  retriever=cls.__client.as_retriever(), 
-                                  return_source_documents=True)
-        
-        query = question
-        
-        return chain(query)
-
 
     @classmethod
     async def create(cls):
@@ -117,6 +100,6 @@ class ChromaSingleton():
         :return: a list with our documents 
         """
 
-        docs = await cls.__client.asimilarity_search(text, k=2)
+        docs = await cls.__client.asimilarity_search(text, k=1)
         
         return docs
