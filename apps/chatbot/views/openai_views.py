@@ -52,7 +52,6 @@ async def post_message(request):
 
     sql_response = await OpenAISingleton.query_information_user(user)
 
-    """
     # ---------------------------------------------------
 
     multi_query_questions = OpenAISingleton.create_multi_query_questions(array_chat_json['content'])
@@ -70,7 +69,6 @@ async def post_message(request):
     context_retrieved = []
     for i in docs:
         context_retrieved.append(f'\n\n{i.page_content}')
-
 
     unique_docs = set(context_retrieved)
 
@@ -90,9 +88,9 @@ async def post_message(request):
     )
     openairep=OpenAIRepository()
 
-    text = await openairep.post_user_message(text, thread_id)"""
+    text = await openairep.post_user_message(text, thread_id)
 
-    return Response({'msg':sql_response['output']})
+    return Response({'msg':sql_response['input']})
 
 
 @api_view(['POST'])
