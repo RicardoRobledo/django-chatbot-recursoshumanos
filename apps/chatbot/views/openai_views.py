@@ -49,6 +49,8 @@ async def post_message(request):
     text = ''
     for i in docs:
         text+=f'\n\n{i.page_content}'
+    
+    print(text)
 
     sql_response = await OpenAISingleton.query_information_user(user)
 
@@ -70,7 +72,6 @@ async def post_message(request):
     for i in docs:
         context_retrieved.append(f'\n\n{i.page_content}')
 
-
     unique_docs = set(context_retrieved)
 
     context = ''
@@ -87,6 +88,7 @@ async def post_message(request):
         context=text,
         question=array_chat_json['content']
     )
+
     openairep=OpenAIRepository()
 
     text = await openairep.post_user_message(text, thread_id)
