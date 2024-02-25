@@ -52,7 +52,7 @@ async def post_message(request):
 
     sql_response = await OpenAISingleton.query_information_user(user)
 
-    # ---------------------------------------------------
+    """# ---------------------------------------------------
 
     multi_query_questions = OpenAISingleton.create_multi_query_questions(array_chat_json['content'])
     multi_query_questions.append(array_chat_json['content'])
@@ -70,19 +70,21 @@ async def post_message(request):
     for i in docs:
         context_retrieved.append(f'\n\n{i.page_content}')
 
+
     unique_docs = set(context_retrieved)
 
     context = ''
     for i in unique_docs:
         context+=i
-    
+    """
+
     from ..utils.prompt_handlers.prompt_loader import load_prompt_file
 
     prompt = load_prompt_file('apps/questions/prompts/prompt_recursos_humanos.txt')
 
     from langchain.prompts import PromptTemplate
     text = PromptTemplate.from_template(prompt).format(
-        information=sql_response['output'],
+        information=sql_response['input'],
         context=text,
         question=array_chat_json['content']
     )
@@ -90,7 +92,7 @@ async def post_message(request):
 
     text = await openairep.post_user_message(text, thread_id)
 
-    return Response({'msg':sql_response['input']})
+    return Response({'msg':text})
 
 
 @api_view(['POST'])
